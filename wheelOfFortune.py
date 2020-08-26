@@ -42,15 +42,22 @@ def user_guess(phrase, coded_phrase):
 
 def update_coded_phrase(letter ,phrase, code_phrase):
     print(letter) #prints N
-    x=re.findall(letter, phrase)
-    print(x) #shows aray of 3 N's
+    #x=re.findall(letter, phrase)
+    iterator= re.finditer(letter, phrase) #finditer -Find all substrings where the RE matches, and returns them 
+    #as an iterator. from https://docs.python.org/3/howto/regex.html
+    
+    for match in iterator:
+        print(match.span()) #span lists the start and end index of the match
+        print(match.span([0][0]))  #need to get index of each match; getting tuple
+        #re.sub()
+    
+    #print(x) #shows aray of 3 N's
     #NEED TO WORK ON THIS AREA - need to knowindex of these 3 Ns
-    for i in range(len(x)):
-
+    
     #replace the * at those indices (use regex) with the letter
     #sub this with this in this - wont' know where  -need index
-        re.sub('*',letter, code_phrase)  
-        print(code_phrase)
+      #  re.sub('*',letter, code_phrase)  
+       # print(code_phrase)
     #return the recoded phrase
     #pass
 
