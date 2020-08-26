@@ -28,16 +28,30 @@ def code_phrase(phrase):
     return coded_phrase
 
 def user_guess(phrase, coded_phrase):
-    guess =input('Guess a letter that you think is in the phrase ->  ')
+    letter =input('Guess a letter that you think is in the phrase ->  ')
     #some validation here - is it a letter? isalpha
     #think about upper/lower case -make it all upper
-    if guess.upper() in phrase:
+    letter = letter.upper()
+    if letter in phrase:
         print('Yes - that letter is in the phrase!')
         #modify coded phrase to add letter
+        update_coded_phrase(letter, phrase, coded_phrase) #call method below sending it 3 parameters
 
-        
     else:
         print('Sorry - that letter is not in the phrase')
 
+def update_coded_phrase(letter ,phrase, code_phrase):
+    print(letter) #prints N
+    x=re.findall(letter, phrase)
+    print(x) #shows aray of 3 N's
+    #NEED TO WORK ON THIS AREA - need to knowindex of these 3 Ns
+    for i in range(len(x)):
+
+    #replace the * at those indices (use regex) with the letter
+    #sub this with this in this - wont' know where  -need index
+        re.sub('*',letter, code_phrase)  
+        print(code_phrase)
+    #return the recoded phrase
+    #pass
 
 main() #call main function
