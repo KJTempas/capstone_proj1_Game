@@ -1,4 +1,4 @@
-import re
+import re, random
 
 #todo - random phrase
 
@@ -7,16 +7,16 @@ def main():
     coded_phrase = code_phrase(phrase) #call method 
     print(f'Here is your mystery phrase: {coded_phrase}')
     user_guess(phrase, coded_phrase)
-    
-    #play again?
 
 
 def select_phrase():
-    #RANDOM
+    phrases = ["No news is good news", "An apple a day keeps the doctor away", "A friend in need is a friend indeed"]
     # randomly select from array of phrases
-    #example phrase
-    phrase = "No news is good news"
-    phrase = phrase.upper()
+    phrase = random.choice(phrases) #info from https://pynative.com/python-random-choice/-select random from a list
+    print(phrase)
+    #example phrase for initial testing
+    #phrase = "No news is good news"
+    phrase = phrase.upper()  #make phrase upper for simpler comparison later (and since Wheel of Fortune uses all caps)
     #print(phrase)
     return phrase
 
@@ -36,7 +36,7 @@ def user_guess(phrase, coded_phrase):
         print('Yes - that letter is in the phrase!')
         #modify coded phrase to add letter
         update_coded_phrase(letter, phrase, coded_phrase) #call method below sending it 3 parameters
-
+        guess_phrase(phrase)
     else:
         print('Sorry - that letter is not in the phrase')
 
@@ -60,5 +60,28 @@ def update_coded_phrase(letter ,phrase, code_phrase):
        # print(code_phrase)
     #return the recoded phrase
     #pass
+def guess_phrase(phrase):
+    want_to_guess_phrase = input('Would you like to guess the phrase? Enter Y or N')
+    if want_to_guess_phrase.upper() == 'Y':
+        total_guess =input('Enter you guess for the whole phrase ->  ')
+        #remove all spaces in total_guess to simpler comparison
+        print(total_guess)
+        total_guess_no_space = total_guess.replace(" ", "").upper()
+        print(total_guess_no_space)
+        phrase_no_space = phrase.replace(" ", "")
+        print(phrase_no_space)
+        if total_guess_no_space == phrase_no_space:
+            print('Congratulations! You correctly identified the phrase!')
+            play_again()
+        else:
+            print('Sorry, that is not correct')
+            user_guess(phrase, code_phrase) #call method to allow another letter guess
+
+def play_again():
+    again = input('Would you like to play the game again?')
+    again = again.upper()
+    main() if again=='Y' else print('Have a nice day') #learned how to do ternary in codeWars
+    
+
 
 main() #call main function
