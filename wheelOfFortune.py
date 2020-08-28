@@ -7,7 +7,7 @@ def main():
     coded_phrase = code_phrase(phrase) 
     print('Let\'s play Wheel of Fortune! You will be given a coded phrase. Spin and select a consonant.')
     print('Consonant in phrase means you keep the money.')
-    print('Vowels can be purchased for 100 each.')
+    print('Vowels can be purchased for $1000 each.')
     print()
     print(f'Here is your mystery phrase: {coded_phrase}')
     dollar = spin_wheel() #call method and return dollar value
@@ -86,10 +86,18 @@ def update_coded_phrase(letter ,phrase, code_phrase):
     indices = [m.start(0) for m in iterator]
     print(indices)#works - gives [array of ints]
     
-    #replace the * at those indices (use regex) with the letter
-    for i in indices:  #try replace
-      #  re.sub('*',"letter", code_phrase[i])  
-        code_phrase[i].replace('*', 'letter')
+    #replace the * at those indices (use regex?) with the letter
+    for i in indices:  #loop through indices 
+        print(i) #prints 0, then 3, then 16
+        print(letter)  #prints N
+        #sub what,  with what , where
+        print(code_phrase[i]) #prints *
+        #print(code_phrase[indices[i]]) #prints *
+        #re.sub(pattern, replacement, string)
+        re.sub(i,letter, code_phrase) #TODO    -WORK ON THIS LIBNE
+        #code_phrase=code_phrase.replace(i, letter)  #not working- arg 1 has to be a str
+        
+    
     print(code_phrase)
     print(f'The mystery phrase now looks like this {code_phrase}')
     return code_phrase
