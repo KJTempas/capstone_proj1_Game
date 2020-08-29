@@ -1,8 +1,7 @@
 import re, random
 
-#todo - random phrase
-
 def main():
+    vowels = ["A", "E", "I", "O", "U"]
     phrase = select_phrase() #call method and return phrase
     coded_phrase = code_phrase(phrase) 
     print('Let\'s play Wheel of Fortune! You will be given a coded phrase. Spin and select a consonant.')
@@ -27,31 +26,33 @@ def select_phrase():
 
 def code_phrase(phrase):
     # show user blanks so they know how many letters and spacing- let * represent letters
-    coded_phrase = re.sub('[A-Za-z]', '*', phrase)
+    coded_phrase = re.sub('[A-Za-z]', 'X', phrase)
     #print(coded_phrase) 
     return coded_phrase
 
 def spin_wheel():
     dollars = [0,500,600,700,800,900]
     dollar = random.choice(dollars)
-    print(dollar)
-    #user_guess(phrase, code_phrase)
+    print(f'The wheel landed on {dollar}. You get to keep this money if you correctly guess a consonant.')
+    user_guess(phrase, code_phrase, dollar)
     return dollar
 
-def user_guess(phrase, coded_phrase,dollar):
+def user_guess(phrase, coded_phrase,dollar, vowels):
     total = 0
     used_consonants = []
     letter =input('Guess a consonant that you think is in the phrase ->  ')
-    #some validation here - is it a letter? isalpha
-    #think about upper/lower case -make it all upper
-    letter = letter.upper()
-    #TODO see if letter already in used_consonants - alert if already guessed that letter
+    if letter.isalpha() and letter not in vowels: #validation that user entered a letter that is not a vowel
+        letter = letter.upper()
+    else:
+        print('That is not a valid consonant')
+
     if letter in used_consonants:
         print('You have already selected that consonant. Select another. ')
-        user_guess(phrase, code_phrase, dollar)
+        #user_guess(phrase, code_phrase, dollar) #call method again - or should I say return?
+        return
     if letter in phrase:
         print('Yes - that letter is in the phrase!')
-        total+= dollar  #add $ to contestant's bank
+        total+= dollar  #add $ to contestant's total
         #modify coded phrase to add letter
         used_consonants.append(letter)
         print('uc', used_consonants)
@@ -72,9 +73,22 @@ def buyOrSpin(dollar):
         buyOrSpin(dollar)
 
 
-def buyVowel(dollar):
+def buyVowel(dollar, total):
     print(f'Your current balance is {dollar}')
     vowels = ["A", "E", "I", "O", "U"]
+    used_vowels = []
+    vowel_cost = 1000
+    if total>1000:
+        letter = input('You may purchase a vowel for 1000.  Select a vowel - >  ')
+        if letter in used_vowels:
+            print('Sorry, you have already selected that vowel')
+            buyVowel(dollar, total)
+        else:
+            total = total - vowel_cost
+            used_vowels.append(letter)
+            update_coded_phrase(letter, phrase, code_phrase)
+        
+        return letter, total
 
 
 def update_coded_phrase(letter ,phrase, code_phrase):
@@ -84,23 +98,32 @@ def update_coded_phrase(letter ,phrase, code_phrase):
     #as an iterator. from https://docs.python.org/3/howto/regex.html
     #https://stackoverflow.com/questions/2674391/python-locating-the-position-of-a-regex-match-in-a-string/16360404
     indices = [m.start(0) for m in iterator]
-    print(indices)#works - gives [array of ints]
+    print(indices)#works - gives [array of ints][0,3,16]
     
     #replace the * at those indices (use regex?) with the letter
     for i in indices:  #loop through indices 
-        print(i) #prints 0, then 3, then 16
+        print(i) #prints 0, then 3, then 16 - the index
         print(letter)  #prints N
         #sub what,  with what , where
-        print(code_phrase[i]) #prints *
-        #print(code_phrase[indices[i]]) #prints *
+        print(code_phrase[i]) #prints * or X - what is there currently
+        #print(code_phrase[indices[i]]) #prints * or X
+        #try using re.sub
         #re.sub(pattern, replacement, string)
-        re.sub(i,letter, code_phrase) #TODO    -WORK ON THIS LIBNE
-        #code_phrase=code_phrase.replace(i, letter)  #not working- arg 1 has to be a str
+        #new_code_phrase = re.sub(code_phrase[i],letter, code_phrase) #TODO    
+        #try using str.replace()
+        new_code_phrase=code_phrase.replace(str(code_phrase[i]), letter)  #not working- arg 1 has to be a str
+        #new_code_phrase = code_phrase[i].replace('X', 'N') #result is just on N
         
+                   #replace letter in code phrase if index in indices
     
-    print(code_phrase)
-    print(f'The mystery phrase now looks like this {code_phrase}')
-    return code_phrase
+   # new_code_phrase = "".join(letter for l in code_phrase if i in indices else l)
+        #from stack overflow- You can't replace a letter in a string. Convert the string to a list, replace the letter, and convert it back to a string.
+        #split = code_phrase.split() #split phrase between each letter
+
+    
+    print(new_code_phrase)
+    print(f'The mystery phrase now looks like this {new_code_phrase}')
+    return new_code_phrase
     
 def guess_phrase(phrase):
     want_to_guess_phrase = input('Would you like to guess the phrase? Enter Y or N')
