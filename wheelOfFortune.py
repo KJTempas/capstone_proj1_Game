@@ -10,7 +10,7 @@ def main():
     print()
     print(f'Here is your mystery phrase: {coded_phrase}')
     dollar = spin_wheel() #call method and return dollar value
-    user_guess(phrase, coded_phrase, dollar)
+    user_guess(phrase, coded_phrase, dollar, vowels)
 
 
 def select_phrase():
@@ -34,7 +34,6 @@ def spin_wheel():
     dollars = [0,500,600,700,800,900]
     dollar = random.choice(dollars)
     print(f'The wheel landed on {dollar}. You get to keep this money if you correctly guess a consonant.')
-    user_guess(phrase, code_phrase, dollar)
     return dollar
 
 def user_guess(phrase, coded_phrase,dollar, vowels):
@@ -73,16 +72,16 @@ def buyOrSpin(dollar):
         buyOrSpin(dollar)
 
 
-def buyVowel(dollar, total):
-    print(f'Your current balance is {dollar}')
-    vowels = ["A", "E", "I", "O", "U"]
+def buyVowel(dollar, total, vowels):
+    print(f'Your current balance is ${dollar}')
+    #vowels = ["A", "E", "I", "O", "U"]
     used_vowels = []
     vowel_cost = 1000
     if total>1000:
         letter = input('You may purchase a vowel for 1000.  Select a vowel - >  ')
         if letter in used_vowels:
             print('Sorry, you have already selected that vowel')
-            buyVowel(dollar, total)
+            buyVowel(dollar, total,vowels)
         else:
             total = total - vowel_cost
             used_vowels.append(letter)
@@ -102,29 +101,15 @@ def update_coded_phrase(letter ,phrase, code_phrase):
     
     #replace the * at those indices (use regex?) with the letter
     for i in indices:  #loop through indices 
-        print(i) #prints 0, then 3, then 16 - the index
-        print(letter)  #prints N
-        #sub what,  with what , where
-        print(code_phrase[i]) #prints * or X - what is there currently
-        #print(code_phrase[indices[i]]) #prints * or X
-        #try using re.sub
-        #re.sub(pattern, replacement, string)
-        #new_code_phrase = re.sub(code_phrase[i],letter, code_phrase) #TODO    
-        #try using str.replace()
-        new_code_phrase=code_phrase.replace(str(code_phrase[i]), letter)  #not working- arg 1 has to be a str
-        #new_code_phrase = code_phrase[i].replace('X', 'N') #result is just on N
-        
-                   #replace letter in code phrase if index in indices
+    #make str a list; replace the letter at the index; join list back into a string
+    #https://pythonexamples.org/python-string-replace-character-at-specific-position/
+        temp = list(code_phrase)
+        temp[i] = letter
+        code_phrase = "".join(temp)
+    print(code_phrase)
     
-   # new_code_phrase = "".join(letter for l in code_phrase if i in indices else l)
-        #from stack overflow- You can't replace a letter in a string. Convert the string to a list, replace the letter, and convert it back to a string.
-        #split = code_phrase.split() #split phrase between each letter
+    return code_phrase
 
-    
-    print(new_code_phrase)
-    print(f'The mystery phrase now looks like this {new_code_phrase}')
-    return new_code_phrase
-    
 def guess_phrase(phrase):
     want_to_guess_phrase = input('Would you like to guess the phrase? Enter Y or N')
     if want_to_guess_phrase.upper() == 'Y':
