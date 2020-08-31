@@ -34,7 +34,7 @@ def code_phrase(phrase):
 def spin_wheel(phrase, coded_phrase, vowels, total):
     dollars = [0,500,600,700,800,900]
     dollar = random.choice(dollars)
-    print(f'The wheel landed on {dollar}. You keep this money if you correctly guess a consonant.')
+    print(f'The wheel landed on ${dollar}.')
     user_guess(phrase, coded_phrase, dollar, vowels, total) #call method below
     return dollar
 
@@ -56,7 +56,7 @@ def user_guess(phrase, coded_phrase, dollar, vowels, total):
         print(f'Yes - that letter is in the phrase! You now have ${total}')
         used_consonants.append(letter) # add to list of cons. already chosen
         print('used cons list', used_consonants)
-        update_coded_phrase(letter, phrase, coded_phrase) #call method below to update the phrase w/ letter
+        coded_phrase = update_coded_phrase(letter, phrase, coded_phrase) #call method below to update the phrase w/ letter
         guess_phrase(phrase, total, dollar, vowels, coded_phrase)  #give option to guess the phrase
     else:
         print('Sorry - that letter is not in the phrase')
@@ -101,15 +101,14 @@ def buy_vowel(total, vowels, phrase, coded_phrase):
 
 
 def update_coded_phrase(letter ,phrase, coded_phrase):
-    print(letter) #prints N
-    #x=re.findall(letter, phrase)
+    print(letter) 
     iterator= re.finditer(letter, phrase) #finditer -Find all substrings where the RE matches, and returns them 
     #as an iterator. from https://docs.python.org/3/howto/regex.html
     #https://stackoverflow.com/questions/2674391/python-locating-the-position-of-a-regex-match-in-a-string/16360404
-    indices = [m.start(0) for m in iterator]
+    indices = [m.start(0) for m in iterator] #make a list of the start indices where the letter is found
     print(indices)#works - gives [array of ints][0,3,16]
     
-    #replace the * at those indices (use regex?) with the letter
+    #replace the * at those indices with the letter
     for i in indices:  #loop through indices 
     #make str a list; replace the letter at the index; join list back into a string
     #https://pythonexamples.org/python-string-replace-character-at-specific-position/
