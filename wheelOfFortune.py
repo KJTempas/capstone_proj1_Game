@@ -1,9 +1,10 @@
 import re, random
 
 def main():
-    vowels = ["A", "E", "I", "O", "U"]
+    vowels = ["A", "E", "I", "O", "U"] #these first 4 variable are used in many methods
     used_consonants = []
-    total = 0 #money for player
+    used_vowels = []
+    total = 0 #money player has
     phrase = select_phrase() #call method and return phrase
     coded_phrase = code_phrase(phrase) 
     print('Let\'s play Wheel of Fortune! You will be given a coded phrase. Spin and select a consonant.')
@@ -11,13 +12,12 @@ def main():
     print('Vowels can be purchased for $1000 each.')
     print()
     print(f'Here is your mystery phrase: {coded_phrase}')
-    spin_wheel(phrase, coded_phrase, vowels, total, used_consonants) #call method and return dollar value
-   # user_guess(phrase, coded_phrase, dollar, vowels, total)
-
+    print()
+    spin_wheel(phrase, coded_phrase, vowels, total, used_consonants,used_vowels) #call method and return dollar value
 
 def select_phrase():
-    phrases = ["No news is good news"]#, "An apple a day keeps the doctor away", 
-   # "A friend in need is a friend indeed"] #add these back after rest running
+    phrases = ["No news is good news", "An apple a day keeps the doctor away", 
+    "A friend in need is a friend indeed"] 
     # randomly select from array of phrases
     phrase = random.choice(phrases) #info from https://pynative.com/python-random-choice/-select random from a list
     print(phrase)
@@ -28,93 +28,98 @@ def select_phrase():
 
 def code_phrase(phrase):
     # show user blanks so they know how many letters and spacing- let * represent letters
-    coded_phrase = re.sub('[A-Za-z]', '*', phrase)
-    #print(coded_phrase) 
+    coded_phrase = re.sub('[A-Za-z]', '*', phrase) #regex sub * for each letter in phrase
     return coded_phrase
 
-def spin_wheel(phrase, coded_phrase, vowels, total, used_consonants,):
-    dollars = [0,500,600,700,800,900]
-    dollar = random.choice(dollars)
+def spin_wheel(phrase, coded_phrase, vowels, total, used_consonants,used_vowels):
+    dollars = [0,500,600,700,800,900] #when user spins wheel, these values are options
+    dollar = random.choice(dollars) #randomly chose dollar amount from above list
     print(f'The wheel landed on ${dollar}.')
-    user_guess(phrase, coded_phrase, dollar, vowels, total, used_consonants) #call method below
+    user_guess(phrase, coded_phrase, dollar, vowels, total, used_consonants,used_vowels) #call method below
     return dollar
 
-def user_guess(phrase, coded_phrase, dollar, vowels, total,used_consonants):
-    #used_consonants = []
+def user_guess(phrase, coded_phrase, dollar, vowels, total, used_consonants, used_vowels):
     letter =input('Guess a consonant that you think is in the phrase ->  ')
-    if letter.isalpha() and letter not in vowels: #validation that user entered a letter that is not a vowel
+    
+    if letter.isalpha() and letter.upper() not in vowels: #validation that user entered a letter that is not a vowel
         letter = letter.upper()
     else:
         print('That is not a valid consonant')
-        user_guess(phrase, coded_phrase, dollar, vowels, total,user_guess) #go back to top of method
+        user_guess(phrase, coded_phrase, dollar, vowels, total,user_guess,used_vowels) #go back to top of method
+    
     if letter in used_consonants:
         print('You have already selected that consonant. Select another. ')
-        user_guess(phrase, coded_phrase, dollar, vowels, total,used_consonants) #call method again 
+        user_guess(phrase, coded_phrase, dollar, vowels, total, used_consonants, used_vowels) #call method again 
         
     if letter in phrase:
         total+= dollar  #add $ to contestant's total
         print(f'Yes - that letter is in the phrase! You now have ${total}')
         used_consonants.append(letter) # add to list of cons. already chosen
-        print('used cons list', used_consonants)
+        #print('used cons list', used_consonants)
         coded_phrase = update_coded_phrase(letter, phrase, coded_phrase) #call method below to update the phrase w/ letter
-        guess_phrase(phrase, total, dollar, vowels, coded_phrase, used_consonants)  #give option to guess the phrase
+        guess_phrase(phrase, total, dollar, vowels, coded_phrase, used_consonants, used_vowels)  #give option to guess the phrase
     else:
         print('Sorry - that letter is not in the phrase')
-        buy_or_spin(total, dollar, vowels, phrase, coded_phrase,used_consonants)
+        #if total>=1000:
+        buy_or_spin(total, dollar, vowels, phrase, coded_phrase,used_consonants, used_vowels)
+        #else:
+         #   user_guess()
 
     return used_consonants
 
-def buy_or_spin(dollar, total, vowels, phrase, coded_phrase, used_consonants):
+def buy_or_spin(dollar, total, vowels, phrase, coded_phrase, used_consonants, used_vowels):
     #future work = determine if enough money and only ask if have >=1000
     if total>=1000:
 
         buyOrSpin = input('Do you want to purchase a vowel or spin for a consonant?  Enter V or C')
         if buyOrSpin.upper() == 'V' and total>=1000:
-            buy_vowel(total, vowels, phrase, coded_phrase,dollar)  #go to this method
+            buy_vowel(total, vowels, phrase, coded_phrase,dollar,used_consonants, used_vowels)  #go to this method
         elif buyOrSpin.upper() =='V' and total<1000: 
             print('Sorry, you do not have enough money for a vowel. Try another consonant instead.s ')
-            spin_wheel(phrase, coded_phrase, vowels, total, used_consonants)
+            spin_wheel(phrase, coded_phrase, vowels, total, used_consonants,used_vowels)
         elif buyOrSpin.upper() == 'C':
-            spin_wheel(phrase, coded_phrase, vowels, total, used_consonants)
+            spin_wheel(phrase, coded_phrase, vowels, total, used_consonants,used_vowels)
         else:
             print('Please enter either V or C')
-            buy_or_spin(dollar, total, vowels, phrase, coded_phrase, used_consonants)#return to top of method
+            buy_or_spin(dollar, total, vowels, phrase, coded_phrase, used_consonants, used_vowels)#return to top of method
     else:
-        spin_wheel(phrase, coded_phrase, vowels, total, used_consonants)
+        spin_wheel(phrase, coded_phrase, vowels, total, used_consonants, used_vowels)
 
 
-def buy_vowel(total, vowels, phrase, coded_phrase,dollar):
+def buy_vowel(total, vowels, phrase, coded_phrase,dollar, used_consonants, used_vowels):
     print(f'Your current balance is ${total}')
-    #vowels = ["A", "E", "I", "O", "U"]
-    used_vowels = []
     print('used vowels', used_vowels)
     vowel_cost = 1000
     if total>=1000:
-        letter = input('You may purchase a vowel for 1000.  Select a vowel - >  ')
+        letter = input('You may purchase a vowel for $1000.  Select a vowel - >  ')
         letter = letter.upper()
-        if letter in used_vowels:
+        if letter in used_vowels: #letter already selected
             print('Sorry, you have already selected that vowel')
-            buy_vowel(total,vowels, phrase, coded_phrase, dollar) #back to top of method
+            buy_vowel(total,vowels, phrase, coded_phrase, dollar, used_consonants, used_vowels) #back to top of method
         elif letter in phrase:
             total = total - vowel_cost #subtract cost of a vowel from total
             used_vowels.append(letter) #add vowel to the used list
-            update_coded_phrase(letter, phrase, coded_phrase) #update the coded phrase with the vowel
+            print(f'Yes! That letter is in the phrase. Your new balance is ${total}')
+            coded_phrase = update_coded_phrase(letter, phrase, coded_phrase) #update the coded phrase with the vowel
+            guess_phrase(phrase, total, dollar, vowels, coded_phrase, used_consonants, used_vowels)  
         else: #letter is not in phrase
+            total = total-vowel_cost #subtract cost of vowel from total
+            used_vowels.append(letter) #add to list already chosen
             print('Sorry, that vowel is not in the phrase')
-            print(f'Your current balance is {total}') 
-            buy_or_spin(dollar, total, vowels, phrase, coded_phrase) #give option of buying another vowel or selecting a consonant
+            print(f'Your current balance is ${total}') 
+            buy_or_spin(dollar, total, vowels, phrase, coded_phrase, used_consonants, used_vowels) #give option of buying another vowel or selecting a consonant
            
 
     return letter, total, coded_phrase, used_vowels
 
 
 def update_coded_phrase(letter ,phrase, coded_phrase):
-    print(letter) 
+    #print(letter) 
     iterator= re.finditer(letter, phrase) #finditer -Find all substrings where the RE matches, and returns them 
     #as an iterator. from https://docs.python.org/3/howto/regex.html
     #https://stackoverflow.com/questions/2674391/python-locating-the-position-of-a-regex-match-in-a-string/16360404
     indices = [m.start(0) for m in iterator] #make a list of the start indices where the letter is found
-    print(indices)#works - gives [array of ints][0,3,16]
+    #print(indices)#works - gives [array of ints][0,3,16]
     
     #replace the * at those indices with the letter
     for i in indices:  #loop through indices 
@@ -124,18 +129,18 @@ def update_coded_phrase(letter ,phrase, coded_phrase):
         temp[i] = letter
         coded_phrase = "".join(temp)
     print(f' Here is the revised phrase with your letter revealed {coded_phrase}')
+    print() #blank line for ease in reading
     
     return coded_phrase
 
-def guess_phrase(phrase, total, dollar, vowels,coded_phrase,used_consonants):
+def guess_phrase(phrase, total, dollar, vowels,coded_phrase,used_consonants, used_vowels):
     want_to_guess_phrase = input('Would you like to guess the phrase? Enter Y or N')
     if want_to_guess_phrase.upper() == 'Y':
         total_guess =input('Enter you guess for the whole phrase ->  ')
         #remove all spaces in total_guess to simpler comparison
-        #print(total_guess)
         total_guess_no_space = total_guess.replace(" ", "").upper()
         phrase_no_space = phrase.replace(" ", "")
-        print(phrase_no_space)
+        #print(phrase_no_space)
         if total_guess_no_space == phrase_no_space:
             print('Congratulations! You correctly identified the phrase!')
             print(f'You have ${total} in the bank')
@@ -143,18 +148,16 @@ def guess_phrase(phrase, total, dollar, vowels,coded_phrase,used_consonants):
         else:
             print('Sorry, that is not correct')
             #user_guess(phrase, code_phrase, dollar, vowels, total) #call method to allow another letter guess
-            buy_or_spin(dollar, total, vowels, phrase, coded_phrase,used_consonants) #send user back to get a V or C
+            buy_or_spin(dollar, total, vowels, phrase, coded_phrase,used_consonants, used_vowels) #send user back to get a V or C
     elif want_to_guess_phrase.upper() == 'N':
-        buy_or_spin(dollar, total, vowels, phrase, coded_phrase,used_consonants)
+        buy_or_spin(dollar, total, vowels, phrase, coded_phrase,used_consonants, used_vowels)
     else:
         print('Not a valid input') #call method again
-        guess_phrase(phrase, total, dollar, vowels, coded_phrase, used_consonants)
+        guess_phrase(phrase, total, dollar, vowels, coded_phrase, used_consonants, used_vowels)
 
 def play_again(total):
     again = input('Would you like to play the game again?')
     again = again.upper()
     main() if again=='Y' else print(f'You won ${total}! Have a nice day') if again == 'N' else  play_again(total) #learned how to do ternary in codeWars
-    #how to call method above 
-
-
+    
 main() #call main function
