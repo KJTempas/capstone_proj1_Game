@@ -1,7 +1,7 @@
 import re, random
 
 def main():
-    vowels = ["A", "E", "I", "O", "U"] #these first 4 variable are used in many methods
+    vowels = ['A', 'E', 'I', 'O', 'U'] #these first 4 variable are used in many methods
     used_consonants = []
     used_vowels = []
     total = 0 #money player has
@@ -16,9 +16,9 @@ def main():
     spin_wheel(phrase, coded_phrase, vowels, total, used_consonants,used_vowels) #call method and return dollar value
 
 def select_phrase():
-    phrases = ["No news is good news", "An apple a day keeps the doctor away", 
-    "A friend in need is a friend indeed","A fool and his money are soon parted", "Haste makes waste", 
-    "Curiosity killed the cat"]  #could add more here
+    phrases = ['No news is good news', 'An apple a day keeps the doctor away', 
+    'A friend in need is a friend indeed','A fool and his money are soon parted', 'Haste makes waste', 
+    'Curiosity killed the cat']  #could add more here
     # randomly select from array of phrases
     phrase = random.choice(phrases) #info from https://pynative.com/python-random-choice/-select random from a list
     phrase = phrase.upper()  #make phrase upper for simpler comparison later (and since Wheel of Fortune uses all caps)
@@ -69,7 +69,7 @@ def buy_or_spin(dollar, total, vowels, phrase, coded_phrase, used_consonants, us
         if buyOrSpin.upper() == 'V' and total>=1000:
             buy_vowel(total, vowels, phrase, coded_phrase,dollar,used_consonants, used_vowels)  #go to this method
         elif buyOrSpin.upper() =='V' and total<1000: 
-            print('Sorry, you do not have enough money for a vowel. Try another consonant instead.s ')
+            print('Sorry, you do not have enough money for a vowel. Try another consonant instead. ')
             spin_wheel(phrase, coded_phrase, vowels, total, used_consonants,used_vowels)
         elif buyOrSpin.upper() == 'C':
             spin_wheel(phrase, coded_phrase, vowels, total, used_consonants,used_vowels)
@@ -148,7 +148,7 @@ def guess_phrase(phrase, total, dollar, vowels,coded_phrase,used_consonants, use
 
 def play_again(total):
     again = input('Would you like to play the game again?')
-    again = again.upper()
-    main() if again=='Y' else print(f'You won ${total}! Have a nice day') if again == 'N' else  play_again(total) #learned how to do ternary in codeWars
+    again = again.upper()   #send to main to start again and clear lists if Y                                                              #is they typed in a letter other than Y or N
+    main() if again=='Y' else print(f'You won ${total}! Have a nice day.') if again =='N' else play_again(total) #learned how to do ternary in codeWars
     
 main() #call main function
