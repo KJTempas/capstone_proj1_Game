@@ -123,7 +123,7 @@ def update_coded_phrase(letter ,phrase, coded_phrase, total):
     print(f' Here is the revised phrase with your letter revealed {coded_phrase}')
     print() #blank line for ease in reading
     #if user has guessed all letters
-    if coded_phrase.replace(" ", "") == phrase.replace(" ", ""):
+    if coded_phrase.replace(' ', '') == phrase.replace(' ', ''): #remove spaces
         print(f'You have completed the phrase! You have ${total}')
         play_again(total)
     return coded_phrase
@@ -133,7 +133,7 @@ def guess_phrase(phrase, total, dollar, vowels,coded_phrase,used_consonants, use
     if want_to_guess_phrase.upper() == 'Y':
         total_guess =input('Enter you guess for the whole phrase ->  ')
         #remove all spaces in total_guess for simpler comparison
-        if total_guess.replace(" ", "").upper() == phrase.replace(" ", "").upper():
+        if total_guess.replace(' ', '').upper() == phrase.replace(' ', '').upper():
             print('Congratulations! You correctly identified the phrase!')
             print(f'You have ${total} in the bank')
             play_again(total)
