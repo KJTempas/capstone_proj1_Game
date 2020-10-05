@@ -152,3 +152,18 @@ def play_again(total):
     main() if again=='Y' else print(f'You won ${total}! Have a nice day.') if again =='N' else play_again(total) #learned how to do ternary in codeWars
     
 main() #call main function
+
+#comment from clara -instructor changing program to avoid recursive nature
+#How about a structure like 
+
+#select phrase, set up game 
+
+#while game is playing
+#  spin wheel
+ # get user guess
+ # user wants to guess word?
+ # user wants to buy vowel?
+ # print game state
+ # decide if game should keep going 
+
+#print results
